@@ -1,0 +1,41 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.intellij' version '1.1.4'
+}
+
+group 'com.github.enokiy'
+version '1.0-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenLocal()
+    maven { name "huawei" ; url "https://mirrors.tools.huawei.com/maven/" }
+    maven { name "M2" ; url 'https://plugins.gradle.org/m2/' }
+    maven { url "https://www.jetbrains.com/intellij-repository/releases" }
+    maven { url "https://cache-redirector.jetbrains.com/intellij-dependencies" }
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'org.json', name: 'json', version: '20200518'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+}
+
+// See https://github.com/JetBrains/gradle-intellij-plugin/
+intellij {
+    version = '2021.2'
+//    localPath = "F:\\Program Files\\JetBrains\\GoLand 2020.1.4"
+    type = 'GO'
+    plugins = ['org.jetbrains.plugins.go:212.4746.52']
+}
+patchPluginXml {
+    sinceBuild = '201'
+    untilBuild = '212.*'
+    changeNotes = """
+        v1.0 first version.
+      """
+}
+
+runIde {
+    autoReloadPlugins = false
+}
