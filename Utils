@@ -1,16 +1,11 @@
 package com.github.enokiy;
 
 import com.goide.psi.*;
-import com.goide.psi.impl.GoTypeUtil;
 import com.google.gson.GsonBuilder;
 import com.intellij.psi.PsiElement;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,7 +37,7 @@ public class Utils {
         basicTypes.put("float32", 0.0F);
         basicTypes.put("float64", 0.0F);
         basicTypes.put("string", "demoString");
-        basicTypes.put("time.Time", LocalDateTime.now().toString());
+        basicTypes.put("time.Time", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
     }
 
     public static boolean isBasicType(String typeName) {
@@ -93,27 +88,55 @@ public class Utils {
             String fieldTagText = field.getTagText();
             String jsonKey = getJsonKeyName(fieldName, fieldTagText);
             GoType fieldType = field.getType();
-            String fieldTypeStr = field.getType().getTypeReferenceExpression() == null ? "NOTBASICTYPE" : field.getType().getTypeReferenceExpression().getText();
-
+            GoTypeReferenceExpression typeRef = fieldType.getTypeReferenceExpression();
+            String fieldTypeStr = typeRef == null ? "NOTBASICTYPE" : typeRef.getText();
+            PsiElement resolve = typeRef != null ? typeRef.resolve() : null;
             if (isBasicType(fieldTypeStr)) {
                 map.put(jsonKey, basicTypes.get(fieldTypeStr));
+            } else if (resolve != null && resolve instanceof GoTypeSpec) {
+                GoTypeSpec typeSpec = (GoTypeSpec) resolve;
+                GoType type = typeSpec.getSpecType().getType();
+                if (type instanceof GoStructType) {
+                    Map<String, Object> tmpMap = getKVMap((GoStructType) type);
+                    map.put(jsonKey, tmpMap);
+                }
             } else if (fieldType instanceof GoMapType) {
                 Map<String, Object> tmpMap = new HashMap<>();
-                GoTypeReferenceExpression typeRef = fieldType.getTypeReferenceExpression();
-                PsiElement resolve = typeRef != null ? typeRef.resolve() : null;
-                if (resolve instanceof GoTypeSpec) {
-                    GoTypeSpec typeSpec = (GoTypeSpec)resolve;
-                    GoType type = typeSpec.getSpecType().getType();
-                    if (type instanceof GoStructType) {
-                        tmpMap = getKVMap((GoStructType)type);
+                // key type default to be string
+                String tmpValueType = ((GoMapType) fieldType).getValueType().getText();
+                if (isBasicType(tmpValueType)) {
+                    tmpMap.put("demoKey", basicTypes.get(tmpValueType));
+                } else {
+                    PsiElement mapValueResolve = ((GoMapType) fieldType).getValueType().getTypeReferenceExpression() != null ? ((GoMapType) fieldType).getValueType().getTypeReferenceExpression().resolve() : null;
+                    if (mapValueResolve != null && mapValueResolve instanceof GoTypeSpec) {
+                        GoTypeSpec typeSpec = (GoTypeSpec) mapValueResolve;
+                        GoType type = typeSpec.getSpecType().getType();
+                        if (type instanceof GoStructType) {
+                            Map<String, Object> valueMap = getKVMap((GoStructType) type);
+                            tmpMap.put("demoKey", valueMap);
+                        }
                     }
                 }
                 map.put(jsonKey, tmpMap);
             } else if (fieldType instanceof GoArrayOrSliceType) {
                 List tmpList = new ArrayList();
+                String tmpStr = ((GoArrayOrSliceType) fieldType).getType().getText();
+                if (isBasicType(tmpStr)) {
+                    tmpList.add(basicTypes.get(tmpStr));
+                } else {
+                    PsiElement listResolve = ((GoArrayOrSliceType) fieldType).getType().getTypeReferenceExpression() != null ? ((GoArrayOrSliceType) fieldType).getType().getTypeReferenceExpression().resolve() : null;
+                    if (listResolve != null && listResolve instanceof GoTypeSpec) {
+                        GoTypeSpec typeSpec = (GoTypeSpec) listResolve;
+                        GoType type = typeSpec.getSpecType().getType();
+                        if (type instanceof GoStructType) {
+                            Map<String, Object> tmpMap = getKVMap((GoStructType) type);
+                            tmpList.add(tmpMap);
+                        }
+                    }
+                }
                 map.put(jsonKey, tmpList);
-            }else{
-                // todo other types
+            } else if (fieldType instanceof GoPointerType) {
+                // todo poniter type
                 map.put(jsonKey, new HashMap<>());
             }
         }
