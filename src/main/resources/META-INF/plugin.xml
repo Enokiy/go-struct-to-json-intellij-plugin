@@ -1,0 +1,31 @@
+<idea-plugin>
+  <id>com.github.enokiy.go-struct-to-json-intellij-plugin</id>
+  <name>go-struct-to-json</name>
+  <vendor email="846800628@qq.com" url="https://github.com/Enokiy">Enokiy</vendor>
+
+  <description><![CDATA[
+    <p>Convert  Go Struct to JSON.</p>
+        <p>&nbsp;</p>
+        <h2>Usage</h2>
+    <p>Select  Go Struct then right click and select "Convert GO Struct To JSON "</p>
+    ]]></description>
+
+  <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <depends>com.intellij.modules.go</depends>
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.lang</depends>
+  <depends>org.jetbrains.plugins.go</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+    <notificationGroup displayType="BALLOON" id="GoStruct2Json.NotificationGroup" key="GoStruct2Json.NotificationGroup"/>
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+    <action id="com.github.enokiy.GoStruct2JsonAction" class="com.github.enokiy.GoStruct2JsonAction" text="Convert Struct to JSON" description="Convert Struct to JSON">
+      <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+    </action>
+  </actions>
+</idea-plugin>
