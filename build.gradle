@@ -35,5 +35,6 @@ patchPluginXml {
 }
 
 runIde {
-    autoReloadPlugins = false
+        autoReloadPlugins = true
+        buildSearchableOptions.enabled = false
 }
