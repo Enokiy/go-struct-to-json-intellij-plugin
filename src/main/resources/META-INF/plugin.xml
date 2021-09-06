@@ -8,6 +8,8 @@
         <p>&nbsp;</p>
         <h2>Usage</h2>
     <p>Select  Go Struct then right click and select "Convert GO Struct To JSON "</p>
+    <br/>
+    <a href="https://github.com/Enokiy/go-struct-to-json-intellij-plugin">plugin home</a>
     ]]></description>
 
   <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html

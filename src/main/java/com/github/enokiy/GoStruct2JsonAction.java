@@ -71,7 +71,7 @@ public class GoStruct2JsonAction extends AnAction {
                 StringSelection selection = new StringSelection(result);
                 Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                 clipboard.setContents(selection,selection);
-                String msg = "Convert Struct " + goStructName + "to json success,copied to clipboard.";
+                String msg = "Convert Struct " + goStructName + " to json success,copied to clipboard.";
                 GoStruct2JsonNotifier.notifyInfo(project,msg + "\n" + result);
             }else{
                 String err = "Convert Struct " + goStructName + " failed,please put the cursor on a struct then right click 'Convert Struct To JSON' label.";
