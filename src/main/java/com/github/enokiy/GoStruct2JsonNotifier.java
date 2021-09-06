@@ -1,9 +1,7 @@
 package com.github.enokiy;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationGroup;
-import com.intellij.notification.NotificationGroupManager;
-import com.intellij.notification.NotificationType;
+import com.intellij.notification.*;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.project.Project;
 
 public class GoStruct2JsonNotifier {
@@ -11,9 +9,9 @@ public class GoStruct2JsonNotifier {
     static{ // Compatible with older versions
         int buildNumber = ApplicationInfo.getInstance().getBuild().getBaselineVersion();
         if (buildNumber <203){
-            goStruct2JsonNotificationGroup = new NotificationGroup("GoStruct2Json.NotificationGroup", NotificationDisplayType.BALLOON, true);
+            notificationGroup = new NotificationGroup("GoStruct2Json.NotificationGroup", NotificationDisplayType.BALLOON, true);
         }else{
-            goStruct2JsonNotificationGroup = NotificationGroupManager.getInstance().getNotificationGroup("GoStruct2Json.NotificationGroup");
+            notificationGroup = NotificationGroupManager.getInstance().getNotificationGroup("GoStruct2Json.NotificationGroup");
         }
     }
 
