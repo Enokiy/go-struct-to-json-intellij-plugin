@@ -12,6 +12,7 @@
     <a href="https://github.com/Enokiy/go-struct-to-json-intellij-plugin">plugin home</a>
     ]]></description>
 
+  <idea-version since-build="203.0"/>
   <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
        on how to target different products -->
   <depends>com.intellij.modules.go</depends>

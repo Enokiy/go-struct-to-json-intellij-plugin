@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.github.enokiy'
-version '1.0'
+version '1.0.1'
 sourceCompatibility = 1.8
 
 repositories {
@@ -23,12 +23,12 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     version = '2021.2'
+    updateSinceUntilBuild = false
     type = 'GO'
     plugins = ['org.jetbrains.plugins.go:212.4746.52']
 }
 patchPluginXml {
     sinceBuild = '203'
-    untilBuild = '212.*'
     changeNotes = """
         v1.0 first version.
       """
